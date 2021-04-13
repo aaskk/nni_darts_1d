@@ -13,6 +13,7 @@ import datasets
 from model import CNN
 from nni.nas.pytorch.callbacks import ArchitectureCheckpoint, LRSchedulerCallback
 from utils import accuracy
+import preprocess
 
 
 logger = logging.getLogger('nni')
@@ -27,9 +28,15 @@ if __name__ == "__main__":
     parser.add_argument("--unrolled", default=False, action="store_true")
     parser.add_argument("--visualization", default=False, action="store_true")
     parser.add_argument("--v1", default=True, action="store_true")
+    parser.add_argument("--SNR", type=int, required=True)
+    parser.add_argument("--checkpath", required=True)
     args = parser.parse_args()
 
-    dataset_train, dataset_valid = datasets.get_dataset("cifar10")
+    path = 'data_CWRU/0HP'
+
+    dataset_train, dataset_valid =preprocess.getdata(trainth=path,length=2048,number=1000,
+                                           normal=True,rate=[0.8,0.2],enc=True,
+                                          enc_step=28, SNR=args.SNR)
 
     model = CNN(32, 3, args.channels, 10, args.layers)
     criterion = nn.CrossEntropyLoss()
