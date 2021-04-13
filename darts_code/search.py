@@ -38,7 +38,7 @@ if __name__ == "__main__":
                                            normal=True,rate=[0.8,0.2],enc=True,
                                           enc_step=28, SNR=args.SNR)
 
-    model = CNN(32, 3, args.channels, 10, args.layers)
+    model = CNN(2048, 1, args.channels, 10, args.layers)
     criterion = nn.CrossEntropyLoss()
 
     optim = torch.optim.SGD(model.parameters(), 0.025, momentum=0.9, weight_decay=3.0E-4)
@@ -56,7 +56,7 @@ if __name__ == "__main__":
                                batch_size=args.batch_size,
                                log_frequency=args.log_frequency,
                                unrolled=args.unrolled,
-                               callbacks=[LRSchedulerCallback(lr_scheduler), ArchitectureCheckpoint("./checkpoints")],
+                               callbacks=[LRSchedulerCallback(lr_scheduler), ArchitectureCheckpoint(args.checkpath)],
                                workers=0)
         if args.visualization:
             trainer.enable_visualization()
